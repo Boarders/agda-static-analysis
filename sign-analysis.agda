@@ -13,6 +13,7 @@ open import Data.Bool using (false; true; if_then_else_)
 open import Signs
 open import Relation.Binary.PropositionalEquality
   using (_≡_; refl)
+open import Data.Product using (∃-syntax; ∃; _,_)
 
 
 α : ℤ -> Sgns
@@ -42,8 +43,14 @@ eval^ (e1 * e2) = (eval^ e1) *^ (eval^ e2)
 pos : ℤ -> Set
 pos v = α v ≡ sg +
 
+pos-lem1 : (n : ℤ) -> pos n -> ∃[ m ] (+_ (suc m) ≡ n)
+pos-lem1 (+_ (suc n)) p = n , refl
+
+
 pos+pos : (v1 v2 : ℤ) -> (pos v1) -> (pos v2) -> pos (v1 +ℤ v2)
-pos+pos (+_ n) (+_ m) p1 p2 = {!!}
+pos+pos n m p1 p2 with pos-lem1 n p1 | pos-lem1 m p2 
+... | n+ , refl | m+ , refl = refl
+
 
 
 α-homo : ∀ (v1 v2 : ℤ) -> ((α (v1 +ℤ v2)) ≤ (α v1 +^ α v2)) ≡ true
