@@ -51,26 +51,28 @@ pos+pos : (v1 v2 : ℤ) -> (pos v1) -> (pos v2) -> pos (v1 +ℤ v2)
 pos+pos n m p1 p2 with pos-lem1 n p1 | pos-lem1 m p2 
 ... | n+ , refl | m+ , refl = refl
 
+pos+z : (v1 v2 : ℤ) -> (pos v1) -> (pos v2) -> pos (v1 +ℤ v2)
+pos+z n m p1 p2 with pos-lem1 n p1 | pos-lem1 m p2 
+... | n+ , refl | m+ , refl = refl
 
 
-α-homo : ∀ (v1 v2 : ℤ) -> ((α (v1 +ℤ v2)) ≤ (α v1 +^ α v2)) ≡ true
-α-homo (+_ n) (+_ zero) = {!!}
-α-homo (+_ n) (+_ (suc m)) = {!!}
-α-homo (+_ n) (-[1+_] n₁) = {!!}
-α-homo (-[1+_] n) v2 = {!!}
+α+-homo : ∀ (v1 v2 : ℤ) -> ((α (v1 +ℤ v2)) ≤ (α v1 +^ α v2))
+α+-homo (+_ zero) (+_ zero) = tt
+α+-homo (+_ (suc n)) (+_ zero) = tt
+α+-homo (+_ zero) (+_ (suc m)) = tt
+α+-homo (+_ (suc n)) (+_ (suc m)) = tt
+α+-homo (+_ zero) (-[1+_] n₁) = tt
+α+-homo (+_ (suc n)) (-[1+_] n₁) = ge-⊤
+α+-homo (-[1+_] n) (+_ zero) = tt
+α+-homo (-[1+_] n) (+_ (suc n₁)) = ge-⊤
+α+-homo (-[1+_] n) (-[1+_] n₁) = tt
 
-refl-≤ : ∀ {s} ->  s ≤ s ≡ true
-refl-≤ {Sgns.⊥} = refl
-refl-≤ {sg x} = refl-=sgn x
-refl-≤ {+- } = refl
-refl-≤ {z- } = refl
-refl-≤ {z+} = refl
-refl-≤ {Sgns.⊤} = refl
 
-soundness : (e : Expr) -> (α (eval e) ≤ eval^ e) ≡ true
+
+soundness : (e : Expr) -> (α (eval e) ≤ eval^ e)
 soundness (I x) = refl-≤
 soundness (e1 + e2) with soundness e1 | soundness e2
-... |  pf1 | pf2 = {!!}
+... |  pf1 | pf2 = trans (α+-homo (eval e1) (eval e2)) {!!}
 soundness (e1 * e2) = {!!}
 
 
